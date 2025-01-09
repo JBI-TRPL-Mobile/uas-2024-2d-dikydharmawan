@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'sign_in_screen.dart';
+import 'sign_up_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -7,7 +9,8 @@ class HomeScreen extends StatelessWidget {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/bg.jpeg'), // Ganti dengan path aset lokal Anda
+            image: AssetImage(
+                'assets/bg.jpeg'), // Ganti dengan path aset lokal Anda
             fit: BoxFit.cover,
           ),
         ),
@@ -93,7 +96,10 @@ class ActionButtons extends StatelessWidget {
       children: [
         ElevatedButton(
           onPressed: () {
-            // Aksi untuk Sign In
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SignInScreen()),
+            );
           },
           style: ElevatedButton.styleFrom(
             padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
@@ -115,7 +121,10 @@ class ActionButtons extends StatelessWidget {
         SizedBox(width: 20),
         ElevatedButton(
           onPressed: () {
-            // Aksi untuk Sign Up
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SignUpScreen()),
+            );
           },
           style: ElevatedButton.styleFrom(
             padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
