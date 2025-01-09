@@ -68,6 +68,13 @@ flutter:
     - assets/bg.jpeg
     - assets/google.png
     - assets/facebook.png
+    - assets/home.png
+    - assets/dashboard.png
+    - assets/sigin.png
+    - assets/signup.png
+    - assets/message.png
+    - assets/profile.png
+    - assets/logout.png
     
 
   # An image asset can refer to one or more resolution-specific "variants", see
