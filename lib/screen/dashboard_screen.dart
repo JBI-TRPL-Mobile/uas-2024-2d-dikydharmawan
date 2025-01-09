@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
+import 'message_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
   @override
@@ -127,6 +128,14 @@ class DashboardScreen extends StatelessWidget {
           unselectedItemColor: Colors.grey,
           showUnselectedLabels: true,
           currentIndex: 0,
+          onTap: (index) {
+            if (index == 1) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MessageScreen()),
+              );
+            }
+          },
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.home_outlined),
