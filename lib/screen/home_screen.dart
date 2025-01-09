@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:template_project/providers/auth_provider.dart';
 import 'sign_in_screen.dart';
 import 'sign_up_screen.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -23,8 +25,8 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   ImagePlaceholder(),
                   SizedBox(height: 20),
-                  TitleText(), // Menambahkan widget judul
-                  SizedBox(height: 10), // Jarak antara judul dan deskripsi
+                  TitleText(),
+                  SizedBox(height: 10),
                   DescriptionText(),
                   SizedBox(height: 40),
                   ActionButtons(),

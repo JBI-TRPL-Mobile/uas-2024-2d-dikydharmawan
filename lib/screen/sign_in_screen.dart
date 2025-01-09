@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import 'sign_up_screen.dart';
+import 'home_screen.dart';
+import 'dashboard_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   @override
@@ -13,6 +15,22 @@ class _SignInScreenState extends State<SignInScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Login Failed'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +73,9 @@ class _SignInScreenState extends State<SignInScreen> {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your email';
                     }
-                    if (!value.contains('@')) {
-                      return 'Please enter a valid email';
+                    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                        .hasMatch(value)) {
+                      return 'Please enter a valid email address';
                     }
                     return null;
                   },
@@ -87,6 +106,9 @@ class _SignInScreenState extends State<SignInScreen> {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your password';
                     }
+                    if (value.length < 6) {
+                      return 'Password must be at least 6 characters';
+                    }
                     return null;
                   },
                 ),
@@ -101,13 +123,23 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      Provider.of<AuthProvider>(context, listen: false).signIn(
-                        _emailController.text,
-                        _passwordController.text,
-                      );
-                      Navigator.pop(context);
+                      try {
+                        await Provider.of<AuthProvider>(context, listen: false)
+                            .signIn(
+                          _emailController.text,
+                          _passwordController.text,
+                        );
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DashboardScreen()),
+                        );
+                      } catch (e) {
+                        _showErrorDialog(
+                            'Invalid email or password. Please try again.');
+                      }
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -164,18 +196,37 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   Widget _socialButton(String imagePath) {
-    return Container(
-      width: 50,
-      height: 50,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Center(
-        child: Image.asset(
-          imagePath,
-          width: 24,
-          height: 24,
+    return InkWell(
+      onTap: () async {
+        try {
+          if (imagePath.contains('google')) {
+            await Provider.of<AuthProvider>(context, listen: false)
+                .signInWithGoogle();
+            Navigator.pop(context);
+          } else if (imagePath.contains('facebook')) {
+            await Provider.of<AuthProvider>(context, listen: false)
+                .signInWithFacebook();
+            Navigator.pop(context);
+          }
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(e.toString())),
+          );
+        }
+      },
+      child: Container(
+        width: 50,
+        height: 50,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Center(
+          child: Image.asset(
+            imagePath,
+            width: 24,
+            height: 24,
+          ),
         ),
       ),
     );

@@ -142,15 +142,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      Provider.of<AuthProvider>(context, listen: false)
-                          .register(
-                        _nameController.text,
-                        _emailController.text,
-                        _passwordController.text,
-                      );
-                      Navigator.pop(context);
+                      try {
+                        await Provider.of<AuthProvider>(context, listen: false)
+                            .register(
+                          _nameController.text,
+                          _emailController.text,
+                          _passwordController.text,
+                        );
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SignInScreen()),
+                        );
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(e.toString())),
+                        );
+                      }
                     }
                   },
                   style: ElevatedButton.styleFrom(
